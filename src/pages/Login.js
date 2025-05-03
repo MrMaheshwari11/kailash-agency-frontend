@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import { API_BASE_URL } from '../config';
 
 const Login = () => {
   const { login } = useContext(AuthContext);
@@ -16,7 +17,7 @@ const Login = () => {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:5000/api/users/login', formData);
+      const res = await axios.post(`${API_BASE_URL}/api/users/login`, formData);
       login(res.data.token);
       navigate('/');
     } catch (error) {

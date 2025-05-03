@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from './AuthContext';
+import { API_BASE_URL } from '../config';
 
 export const CartContext = createContext();
 
@@ -8,12 +9,12 @@ export const CartProvider = ({ children }) => {
   const { user } = useContext(AuthContext);
   const [cart, setCart] = useState([]);
 
-  // Fetch cart from server when user logs in
   useEffect(() => {
     if (user) {
-      axios.get('http://localhost:5000/api/cart', {
-        headers: { Authorization: `Bearer ${user.token}` },
-      })
+      axios
+        .get(`${API_BASE_URL}/api/cart`, {
+          headers: { Authorization: `Bearer ${user.token}` },
+        })
         .then(res => {
           const cartItems = res.data.products.map(item => ({
             product: item.product,
@@ -27,10 +28,10 @@ export const CartProvider = ({ children }) => {
     }
   }, [user]);
 
-  const addToCart = async (product) => {
+  const addToCart = async product => {
     try {
       const res = await axios.post(
-        'http://localhost:5000/api/cart/add',
+        `${API_BASE_URL}/api/cart/add`,
         { productId: product._id },
         { headers: { Authorization: `Bearer ${user.token}` } }
       );
@@ -44,10 +45,10 @@ export const CartProvider = ({ children }) => {
     }
   };
 
-  const removeFromCart = async (productId) => {
+  const removeFromCart = async productId => {
     try {
       const res = await axios.post(
-        'http://localhost:5000/api/cart/remove',
+        `${API_BASE_URL}/api/cart/remove`,
         { productId },
         { headers: { Authorization: `Bearer ${user.token}` } }
       );
@@ -64,7 +65,7 @@ export const CartProvider = ({ children }) => {
   const updateQuantity = async (productId, quantity) => {
     try {
       const res = await axios.post(
-        'http://localhost:5000/api/cart/update',
+        `${API_BASE_URL}/api/cart/update`,
         { productId, quantity },
         { headers: { Authorization: `Bearer ${user.token}` } }
       );
@@ -80,7 +81,7 @@ export const CartProvider = ({ children }) => {
 
   const clearCart = async () => {
     try {
-      await axios.delete('http://localhost:5000/api/cart/clear', {
+      await axios.delete(`${API_BASE_URL}/api/cart/clear`, {
         headers: { Authorization: `Bearer ${user.token}` },
       });
       setCart([]);

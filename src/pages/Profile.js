@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../config';
 
 const Profile = () => {
   const { user, setUser } = useContext(AuthContext);
@@ -25,7 +26,7 @@ const Profile = () => {
 
   const fetchProfile = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/users/profile', {
+      const res = await axios.get(`${API_BASE_URL}/api/users/profile`, {
         headers: { Authorization: `Bearer ${user.token}` },
       });
       setProfile(res.data);
@@ -48,11 +49,11 @@ const Profile = () => {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      const res = await axios.put('http://localhost:5000/api/users/profile', formData, {
+      const res = await axios.put(`${API_BASE_URL}/api/users/profile`, formData, {
         headers: { Authorization: `Bearer ${user.token}` },
       });
       setProfile(res.data);
-      setUser({ ...user, ...res.data }); // Update user context
+      setUser({ ...user, ...res.data });
       setSuccess('Profile updated successfully!');
       setError(null);
     } catch (error) {

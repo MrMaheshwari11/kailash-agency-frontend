@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import { API_BASE_URL } from '../config';
 
 const Register = () => {
   const { login } = useContext(AuthContext);
@@ -22,7 +23,7 @@ const Register = () => {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:5000/api/users/register', formData);
+      const res = await axios.post(`${API_BASE_URL}/api/users/register`, formData);
       login(res.data.token);
       navigate('/');
     } catch (error) {

@@ -1,21 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
+import { API_BASE_URL } from '../config';
 
 const Orders = () => {
   const { user } = useContext(AuthContext);
   const [orders, setOrders] = useState([]);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    if (user) {
-      fetchOrders();
-    }
-  }, [user]);
-
   const fetchOrders = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/orders/user', {
+      const res = await axios.get(`${API_BASE_URL}/api/orders/user`, {
         headers: { Authorization: `Bearer ${user.token}` },
       });
       setOrders(res.data);
@@ -26,10 +21,16 @@ const Orders = () => {
     }
   };
 
+  useEffect(() => {
+    if (user) {
+      fetchOrders();
+    }
+  }, [user, fetchOrders]);
+
   const handleCancelOrder = async orderId => {
     if (window.confirm('Are you sure you want to cancel this order?')) {
       try {
-        await axios.delete(`http://localhost:5000/api/orders/${orderId}`, {
+        await axios.delete(`${API_BASE_URL}/api/orders/${orderId}`, {
           headers: { Authorization: `Bearer ${user.token}` },
         });
         setOrders(orders.filter(order => order._id !== orderId));

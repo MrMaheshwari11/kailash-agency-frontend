@@ -4,6 +4,7 @@ import { CartContext } from '../context/CartContext';
 import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
 import Modal from '../components/Modal';
+import { API_BASE_URL } from '../config';
 
 const Checkout = () => {
   const { cart, clearCart } = useContext(CartContext);
@@ -41,7 +42,7 @@ const Checkout = () => {
 
     try {
       console.log('Creating order with data:', orderData);
-      const response = await axios.post('http://localhost:5000/api/orders', orderData, {
+      const response = await axios.post(`${API_BASE_URL}/api/orders`, orderData, {
         headers: { Authorization: `Bearer ${user.token}` },
       });
       console.log('Order created successfully:', response.data);
